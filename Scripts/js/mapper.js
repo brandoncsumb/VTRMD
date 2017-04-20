@@ -1,10 +1,10 @@
 
 // Initialize Map when page loads
 function pageLoad(){
-    var map = '<div id="map"></div>'
+    var map = '<div id="map"></div>';
     $( "body" ).append(map);
     initMap();
-}
+};
 
 /* * DUMMY TEST DATA * * */
 var tests = {
@@ -32,7 +32,7 @@ var tests = {
         secondISP: "AT&T",
         thirdISP: "T-Mobile"
     }
-}
+};
 /* * * */
 
 
