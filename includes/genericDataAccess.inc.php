@@ -68,24 +68,24 @@ function fetchRecord($sql, $namedParameters = array()) {
  */
 function insertRecord($sql, $namedParameters = array()) {
 	
-	$conn = createSqlConn();
+	$conn = createConn();
 	
-	try {
+//	try {
 		
 		//Prepare the sql and execute the statment
 		$prepedPDO = $conn -> prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
 		$isInserted = $prepedPDO -> execute($namedParameters);
 	
-	} catch(Exception $ex) {
+	//} catch(Exception $ex) {
 		//Log the error and send email
 
 		
-		$isInserted = false;
-	}
+		//$isInserted = false;
+	//}
 	
-	$conn = null;
+//	$conn = null;
 
-	return $isInserted;
+	//return $isInserted;
 }
 
 

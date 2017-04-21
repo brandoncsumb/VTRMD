@@ -9,23 +9,24 @@ include_once 'genericDataAccess.inc.php';
  */
 function insertLocation($master_id, $location_id, $lat, $long){
 
-	$sql = "INSERT INTO `ciam1324`.`dv_test_locations` \n"
+	$sql = "INSERT INTO `sale7312`.`dv_test_locations` \n"
 	. "(`Master_ID`, `LocationID`, `Geo_location`, `Updated`) \n"
-	. "VALUES (:master_id, :location_id, GeomFromText('POINT(:lat :long)',0),\n"
-	. " CURRENT_TIMESTAMP);";
+	. "VALUES (:master_id, :location_id, GeomFromText('POINT(:lat :long)',0), CURRENT_TIMESTAMP);";
 	
 	//The named parameters for this call
 	$parameters = array();
 	$parameters[':master_id'] = $master_id;
 	$parameters[':location_id'] = $location_id;
 	$parameters[':lat'] = $lat;
-        $parameters[':long'] = $long;
+    $parameters[':long'] = $long;
 
 	$result = array();
 	$result['rows_effected'] = 0;
+	$result['db_name'] = "";
 	$re = insertRecord($sql, $parameters);
         if($re != null){
  	   $result['rows_effected'] = $re;
+	   $result['db_name'] = "dv_test_locations";
 	}
 	return $result;
 }
@@ -36,22 +37,385 @@ function insertLocation($master_id, $location_id, $lat, $long){
  */
 function insertCalSpeedData($data){
     
-    $sql = "INSERT INTO `dv_calspeed_data` \n"
-         . "(`Master_ID`,) \n"
-         . "VALUES (`:Master_ID`) ;";
+    $sql = "INSERT INTO `sale7312`.`dv_calspeed_data` (
+		 `Master_ID`,
+		 `Tester`,
+		 `LocationID`,
+		 `Date`, 
+		 `Time`, 
+		 `Provider`, 
+		 `Operator`, 
+		 `Network`, 
+		 `DeviceType`, 
+		 `NormalLAT`, 
+		 `NormalLONG`, 
+		 `cwTr_hops`, 
+		 `cwStartISP`, 
+		 `cwStartHops`, 
+		 `cwStartRTT`, 
+		 `cwTnISP1`, 
+		 `cwTnHops1`, 
+		 `cwTnRTT1`, 
+		 `cwTnISP2`, 
+		 `cwTnHops2`, 
+		 `cwTnRTT2`, 
+		 `cwTnISP3`, 
+		 `cwTnHops3`, 
+		 `cwTnRTT3`, 
+		 `cwTnISP4`, 
+		 `cwTnHops4`, 
+		 `cwTnRTT4`, 
+		 `cwTnISP5`, 
+		 `cwTnHops5`, 
+		 `cwTnRTT5`, 
+		 `cwTnISP6`, 
+		 `cwTnHops6`, 
+		 `cwTnRTT6`, 
+		 `cwTnISP7`, 
+		 `cwTnHops7`, 
+		 `cwTnRTT7`, 
+		 `cwTnISP8`, 
+		 `cwTnHops8`, 
+		 `cwTnRTT8`, 
+		 `cwTnISP9`, 
+		 `cwTnHops9`, 
+		 `cwTnRTT9`, 
+		 `cwTnISP10`, 
+		 `cwTnHops10`, 
+		 `cwTnRTT10`, 
+		 `cwEndISP`, 
+		 `cwEndHops`, 
+		 `cwEndRTT`, 
+		 `eTr_hops`, 
+		 `eStartISP`, 
+		 `eStartHops`, 
+		 `eStartRTT`, 
+		 `eTnISP1`, 
+		 `eTnHops1`, 
+		 `eTnRTT1`, 
+		 `eTnISP2`, 
+		 `eTnHops2`, 
+		 `eTnRTT2`, 
+		 `eTnISP3`, 
+		 `eTnHops3`, 
+		 `eTnRTT3`, 
+		 `eTnISP4`, 
+		 `eTnHops4`, 
+		 `eTnRTT4`, 
+		 `eTnISP5`, 
+		 `eTnHops5`, 
+		 `eTnRTT5`, 
+		 `eTnISP6`, 
+		 `eTnHops6`, 
+		 `eTnRTT6`, 
+		 `eTnISP7`, 
+		 `eTnHops7`, 
+		 `eTnRTT7`, 
+		 `eTnISP8`, 
+		 `eTnHops8`, 
+		 `eTnRTT8`, 
+		 `eTnISP9`, 
+		 `eTnHops9`, 
+		 `eTnRTT9`, 
+		 `eTnISP10`, 
+		 `eTnHops10`, 
+		 `eTnRTT10`, 
+		 `eEndISP`, 
+		 `eEndHops`, 
+		 `eEndRTT`, 
+		 `owTr_hops`, 
+		 `owStartISP`, 
+		 `owStartHops`,
+		 `owStartRTT`, 
+		 `owTnISP1`, 
+		 `owTnHops1`, 
+		 `owTnRTT1`, 
+		 `owTnISP2`, 
+		 `owTnHops2`, 
+		 `owTnRTT2`, 
+		 `owTnISP3`, 
+		 `owTnHops3`, 
+		 `owTnRTT3`, 
+		 `owTnISP4`, 
+		 `owTnHops4`, 
+		 `owTnRTT4`, 
+		 `owTnISP5`, 
+		 `owTnHops5`, 
+		 `owTnRTT5`, 
+		 `owTnISP6`, 
+		 `owTnHops6`, 
+		 `owTnRTT6`, 
+		 `owTnISP7`, 
+		 `owTnHops7`, 
+		 `owTnRTT7`, 
+		 `owTnISP8`, 
+		 `owTnHops8`, 
+		 `owTnRTT8`, 
+		 `owTnISP9`, 
+		 `owTnHops9`, 
+		 `owTnRTT9`, 
+		 `owTnISP10`, 
+		 `owTnHops10`, 
+		 `owTnRTT10`, 
+		 `owEndISP`, 
+		 `owEndHops`, 
+		 `owEndRTT`)
+		  VALUES(
+		  :Master_ID, 
+		  :Tester, 
+		  :LocationID, 
+		  :Date, 
+		  :Time, 
+		  :Provider, 
+		  :Operator, 
+		  :Network, 
+		  :DeviceType, 
+		  :NormalLAT, 
+		  :NormalLONG, 
+		  :cwTr_hops, 
+		  :cwStartISP, 
+		  :cwStartHops, 
+		  :cwStartRTT, 
+		  :cwTnISP1, 
+		  :cwTnHops1,  
+		  :cwTnRTT1, 
+		  :cwTnISP2, 
+		  :cwTnHops2, 
+		  :cwTnRTT2, 
+		  :cwTnISP3, 
+		  :cwTnHops3, 
+		  :cwTnRTT3, 
+		  :cwTnISP4, 
+		  :cwTnHops4, 
+		  :cwTnRTT4, 
+		  :cwTnISP5, 
+		  :cwTnHops5, 
+		  :cwTnRTT5, 
+		  :cwTnISP6, 
+		  :cwTnHops6, 
+		  :cwTnRTT6, 
+		  :cwTnISP7, 
+		  :cwTnHops7, 
+		  :cwTnRTT7, 
+		  :cwTnISP8, 
+		  :cwTnHops8, 
+		  :cwTnRTT8, 
+		  :cwTnISP9, 
+		  :cwTnHops9, 
+		  :cwTnRTT9, 
+		  :cwTnISP10, 
+		  :cwTnHops10, 
+		  :cwTnRTT10, 
+		  :cwEndISP, 
+		  :cwEndHops, 
+		  :cwEndRTT, 
+		  :eTr_hops, 
+		  :eStartISP, 
+		  :eStartHops, 
+		  :eStartRTT, 
+		  :eTnISP1, 
+		  :eTnHops1, 
+		  :eTnRTT1, 
+		  :eTnISP2, 
+		  :eTnHops2, 
+		  :eTnRTT2, 
+		  :eTnISP3, 
+		  :eTnHops3, 
+		  :eTnRTT3, 
+		  :eTnISP4, 
+		  :eTnHops4, 
+		  :eTnRTT4, 
+		  :eTnISP5, 
+		  :eTnHops5, 
+		  :eTnRTT5, 
+		  :eTnISP6, 
+		  :eTnHops6, 
+		  :eTnRTT6, 
+		  :eTnISP7, 
+		  :eTnHops7, 
+		  :eTnRTT7, 
+		  :eTnISP8, 
+		  :eTnHops8, 
+		  :eTnRTT8, 
+		  :eTnISP9, 
+		  :eTnHops9, 
+		  :eTnRTT9, 
+		  :eTnISP10, 
+		  :eTnHops10, 
+		  :eTnRTT10, 
+		  :eEndISP, 
+		  :eEndHops, 
+		  :eEndRTT, 
+		  :owTr_hops, 
+		  :owStartISP, 
+		  :owStartHops,
+		  :owStartRTT, 
+		  :owTnISP1, 
+		  :owTnHops1, 
+		  :owTnRTT1, 
+		  :owTnISP2, 
+		  :owTnHops2, 
+		  :owTnRTT2, 
+		  :owTnISP3, 
+		  :owTnHops3, 
+		  :owTnRTT3, 
+		  :owTnISP4, 
+		  :owTnHops4, 
+		  :owTnRTT4, 
+		  :owTnISP5, 
+		  :owTnHops5, 
+		  :owTnRTT5, 
+		  :owTnISP6, 
+		  :owTnHops6, 
+		  :owTnRTT6, 
+		  :owTnISP7, 
+		  :owTnHops7, 
+		  :owTnRTT7, 
+		  :owTnISP8, 
+		  :owTnHops8, 
+		  :owTnRTT8, 
+		  :owTnISP9, 
+		  :owTnHops9, 
+		  :owTnRTT9, 
+		  :owTnISP10, 
+		  :owTnHops10, 
+		  :owTnRTT10, 
+		  :owEndISP, 
+		  :owEndHops, 
+		  :owEndRTT)";
     
     $parameters = array();
-    $parameters[':Master_ID'] = $data[0];
-    
+    $parameters[':Master_ID'] = $data[1];
+	$parameters[':Tester'] = $data[2];
+    $parameters[':LocationID'] = $data[3];
+    $parameters[':Date'] = $data[4];
+    $parameters[':Time'] = $data[5];
+    $parameters[':Provider'] = $data[6];
+    $parameters[':Operator'] = $data[7];
+    $parameters[':Network'] = $data[8];
+    $parameters[':DeviceType'] = $data[9];
+    $parameters[':NormalLAT'] = $data[10];
+    $parameters[':NormalLONG'] = $data[11];
+    $parameters[':cwTr_hops'] = $data[12];
+    $parameters[':cwStartISP'] = $data[13];
+    $parameters[':cwStartHops'] = $data[14];
+    $parameters[':cwStartRTT'] = $data[15];
+    $parameters[':cwTnISP1'] = $data[16];
+    $parameters[':cwTnHops1'] = $data[17];
+    $parameters[':cwTnRTT1'] = $data[18];
+    $parameters[':cwTnISP2'] = $data[19];
+    $parameters[':cwTnHops2'] = $data[20];
+    $parameters[':cwTnRTT2'] = $data[21];
+    $parameters[':cwTnISP3'] = $data[22];
+    $parameters[':cwTnHops3'] = $data[23];
+    $parameters[':cwTnRTT3'] = $data[24];
+    $parameters[':cwTnISP4'] = $data[25];
+    $parameters[':cwTnHops4'] = $data[26];
+    $parameters[':cwTnRTT4'] = $data[27];
+    $parameters[':cwTnISP5'] = $data[28];
+    $parameters[':cwTnHops5'] = $data[29];
+    $parameters[':cwTnRTT5'] = $data[30];
+    $parameters[':cwTnISP6'] = $data[31];
+    $parameters[':cwTnHops6'] = $data[32];
+    $parameters[':cwTnRTT6'] = $data[33];
+    $parameters[':cwTnISP7'] = $data[34];
+    $parameters[':cwTnHops7'] = $data[35];
+    $parameters[':cwTnRTT7'] = $data[36];
+    $parameters[':cwTnISP8'] = $data[37];
+    $parameters[':cwTnHops8'] = $data[38];
+    $parameters[':cwTnRTT8'] = $data[39];
+    $parameters[':cwTnISP9'] = $data[40];
+    $parameters[':cwTnHops9'] = $data[41];
+    $parameters[':cwTnRTT9'] = $data[42];
+    $parameters[':cwTnISP10'] = $data[43];
+    $parameters[':cwTnHops10'] = $data[44];
+    $parameters[':cwTnRTT10'] = $data[45];
+    $parameters[':cwEndISP'] = $data[46];
+    $parameters[':cwEndHops'] = $data[47];
+    $parameters[':cwEndRTT'] = $data[48];
+    $parameters[':eTr_hops'] = $data[49];
+    $parameters[':eStartISP'] = $data[50];
+    $parameters[':eStartHops'] = $data[51];
+    $parameters[':eStartRTT'] = $data[52];
+    $parameters[':eTnISP1'] = $data[53];
+    $parameters[':eTnHops1'] = $data[54];
+    $parameters[':eTnRTT1'] = $data[55];
+    $parameters[':eTnISP2'] = $data[56];
+    $parameters[':eTnHops2'] = $data[57];
+    $parameters[':eTnRTT2'] = $data[58];
+    $parameters[':eTnISP3'] = $data[59];
+    $parameters[':eTnHops3'] = $data[60];
+    $parameters[':eTnRTT3'] = $data[61];
+    $parameters[':eTnISP4'] = $data[62];
+    $parameters[':eTnHops4'] = $data[63];
+    $parameters[':eTnRTT4'] = $data[64];
+    $parameters[':eTnISP5'] = $data[65];
+    $parameters[':eTnHops5'] = $data[66];
+    $parameters[':eTnRTT5'] = $data[67];
+    $parameters[':eTnISP6'] = $data[68];
+    $parameters[':eTnHops6'] = $data[69];
+    $parameters[':eTnRTT6'] = $data[70];
+    $parameters[':eTnISP7'] = $data[71];
+    $parameters[':eTnHops7'] = $data[72];
+    $parameters[':eTnRTT7'] = $data[73];
+    $parameters[':eTnISP8'] = $data[74];
+    $parameters[':eTnHops8'] = $data[75];
+    $parameters[':eTnRTT8'] = $data[76];
+    $parameters[':eTnISP9'] = $data[77];
+    $parameters[':eTnHops9'] = $data[78];
+    $parameters[':eTnRTT9'] = $data[79];
+    $parameters[':eTnISP10'] = $data[80];
+    $parameters[':eTnHops10'] = $data[81];
+    $parameters[':eTnRTT10'] = $data[82];
+    $parameters[':eEndISP'] = $data[83];
+    $parameters[':eEndHops'] = $data[84];
+    $parameters[':eEndRTT'] = $data[85];
+    $parameters[':owTr_hops'] = $data[86];
+    $parameters[':owStartISP'] = $data[87];
+    $parameters[':owStartHops'] = $data[88];
+    $parameters[':owStartRTT'] = $data[89];
+    $parameters[':owTnISP1'] = $data[90];
+    $parameters[':owTnHops1'] = $data[91];
+    $parameters[':owTnRTT1'] = $data[92];
+    $parameters[':owTnISP2'] = $data[93];
+    $parameters[':owTnHops2'] = $data[94];
+    $parameters[':owTnRTT2'] = $data[95];
+    $parameters[':owTnISP3'] = $data[96];
+    $parameters[':owTnHops3'] = $data[97];
+    $parameters[':owTnRTT3'] = $data[98];
+    $parameters[':owTnISP4'] = $data[99];
+    $parameters[':owTnHops4'] = $data[100];
+    $parameters[':owTnRTT4'] = $data[101];
+    $parameters[':owTnISP5'] = $data[102];
+    $parameters[':owTnHops5'] = $data[103];
+    $parameters[':owTnRTT5'] = $data[104];
+    $parameters[':owTnISP6'] = $data[105];
+    $parameters[':owTnHops6'] = $data[106];
+    $parameters[':owTnRTT6'] = $data[107];
+    $parameters[':owTnISP7'] = $data[108];
+    $parameters[':owTnHops7'] = $data[109];
+    $parameters[':owTnRTT7'] = $data[110];
+    $parameters[':owTnISP8'] = $data[111];
+    $parameters[':owTnHops8'] = $data[112];
+    $parameters[':owTnRTT8'] = $data[113];
+    $parameters[':owTnISP9'] = $data[114];
+    $parameters[':owTnHops9'] = $data[115];
+    $parameters[':owTnRTT9'] = $data[116];
+    $parameters[':owTnISP10'] = $data[117];
+    $parameters[':owTnHops10'] = $data[118];
+    $parameters[':owTnRTT10'] = $data[119];
+    $parameters[':owEndISP'] = $data[120];
+    $parameters[':owEndHops'] = $data[121];
+	$parameters[':owEndRTT'] = $data[122];
     $result = array();
     $result['rows_effected'] = 0;
+	$result['db_name'] = "";
     $re = insertRecord($sql, $parameters);
     if($re != null){
         $result['rows_effected'] = $re;
+		$result['db_name'] = "dv_calspeed_data";
     }
-    
     return $result;
-    
 }
 
 

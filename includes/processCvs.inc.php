@@ -96,7 +96,7 @@
 	</style>
 	<body>
 		<nav>
-				<a href="/upload.html">Upload</a>
+				<a href="../cvs_upload.html">Upload</a>
 				<a href="/contact">Contact</a>
 		</nav>		
 	</body>
@@ -107,6 +107,7 @@
 <?php
 //Include connection file
 include_once "conn.inc.php";
+include_once "appDataAccess.inc.php";
 //db connection 
 $link = createConn();
 //if the form is set
@@ -123,23 +124,50 @@ if (isset($_POST['submit'])) {
 			return;
 		}
     	//Display file upload success
-        echo "<h1>" . "File ". $_FILES['fileToUpload']['name'] ." uploaded successfully." . "</h1>";
+        echo "<h1>" . "File uploaded successfully." . "</h1>";
 		//if error
 		if($_FILES["fileToUpload"]["error"] > 0){
 	    	echo "Error: " . $_FILES["fileToUpload"]["error"] . "<br>";
 		} 
 		//display file info
 		else{
-		    echo "<br>" . "File Name: " . $_FILES["fileToUpload"]["name"] . "<br>";
+		    echo "File Name: " . $_FILES["fileToUpload"]["name"] . "<br>";
 		    echo "File Type: " . $_FILES["fileToUpload"]["type"] . "<br>";
 		    echo "File Size: " . ($_FILES["fileToUpload"]["size"] / 1048576) . " MB<br>";
 		    echo "Stored in: " . $_FILES["fileToUpload"]["tmp_name"] . "<br>" . "<br>";
 		}
     }
+	//Grab the Uploaded File
+    $handle = fopen($_FILES['fileToUpload']['tmp_name'], "r",true);
+	$row = 0;
+	$data_raw_csv;
+	$row_count_1 = 0;
+	$row_count_2 = 0;
+	while($data = fgetcsv($handle, ',')){
+	    $num = count($data);
+	    if($row == 0){
+	            $field_labels = $data;
+	    }else{
+	        $data_raw_csv[$row -1] = $data;
+	    }
+	    $row++;
+	    if($row != 1){
+	    
+		//Insert into database
+		$result_data = array();
+		$result_location = array();
+		$result_location['rows_effected'] = 1000;
+		$result_data['rows_effected'] = 1000;
+		$result_location['db_name'] = "fuck";
+		$result_data['db_name'] = "fuck";
 	
-}
-
-
-
-
+		$result_data = insertCalSpeedData($data);
+		//$result_location = insertLocation($data[1],$data[3],$data[10],$data[11]);
+		$row_count_1 += $result_data['rows_effected'];
+		$row_count_2 += $result_location['rows_effected'];
+		}
+	}
+	echo "In table '" . $result_data['db_name'] . " ', " . $result_data['rows_effected'] . " rows were inserted. <br><br>";
+	echo "In table '" . $result_location['db_name']  . " ', " .  $result_location['rows_effected'] . " rows were inserted";
+	fclose($handle);}
 ?>
