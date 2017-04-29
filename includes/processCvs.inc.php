@@ -96,8 +96,7 @@
 	</style>
 	<body>
 		<nav>
-				<a href="../cvs_upload.html">Upload</a>
-				<a href="/contact">Contact</a>
+				<a href="../cvs_upload.html">Back to Upload Page</a>
 		</nav>		
 	</body>
 	<footer>

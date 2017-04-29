@@ -28,6 +28,9 @@ function insertLocation($master_id, $location_id, $lat, $long){
 		$result2['data_rows_inserted'] = 1;
 		$result2['data_rows_updated'] = 0;
 		$result2['db_name'] = "dv_test_locations";
+		if($re == false){
+			throw new Exception("Updated not insert. Going to try and update now.");
+		}
 	}
 	catch(Exception $ex) {
 		try{
@@ -560,6 +563,9 @@ function insertCalSpeedData($data){
 		$result['data_rows_inserted'] = 1;
 		$result['data_rows_updated'] = 0;
 		$result['db_name'] = "dv_calspeed_data";
+		if($re == false){
+			throw new Exception("Updated not insert. Going to try and update now.");
+		}
 	}
 	catch(Exception $ex) {
 		try{
