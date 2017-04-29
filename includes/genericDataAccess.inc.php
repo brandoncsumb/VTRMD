@@ -15,7 +15,7 @@ function fetchAllRecords($sql, $namedParameters = array()) {
 
 	$conn = createConn();
 
-	//try {
+	try {
 		
 		//Prepare the sql and execute the statment
 		$query = $conn -> prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
@@ -23,13 +23,13 @@ function fetchAllRecords($sql, $namedParameters = array()) {
 		//Retieve all the rows
 		$records = $query -> fetchAll(PDO::FETCH_ASSOC);
 
-	//} catch(Exception $ex) {
+	} catch(Exception $ex) {
 		//Log the error and send email
 
 
 		$records = null; //set null for caller
 	
-	//}
+	}
 	
 	$conn = NULL;	
 
@@ -69,9 +69,10 @@ function fetchRecord($sql, $namedParameters = array()) {
 function insertRecord($sql, $namedParameters = array()) {
 	
 	$conn = createConn();
+	
 	try {
-		
 		//Prepare the sql and execute the statment
+		
 		$prepedPDO = $conn -> prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
 		$isInserted = $prepedPDO -> execute($namedParameters);
 	
