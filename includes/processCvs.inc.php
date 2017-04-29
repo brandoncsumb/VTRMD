@@ -111,6 +111,10 @@ include_once "appDataAccess.inc.php";
 //db connection 
 $link = createConn();
 //if the form is set
+if(!isset($_FILES['fileToUpload']) || $_FILES['fileToUpload']['error'] == UPLOAD_ERR_NO_FILE) {
+    echo "<br><h3>Error no file selected!</h3>"; 
+	return;
+}
 if (isset($_POST['submit'])) {
 	//if form set and file uploaded
     if (is_uploaded_file($_FILES['fileToUpload']['tmp_name'])) {
@@ -119,8 +123,8 @@ if (isset($_POST['submit'])) {
 		$filename1 = $_FILES['fileToUpload']['name'];
 		$ext = pathinfo($filename1, PATHINFO_EXTENSION);
 		if(!in_array($ext,$allowed) ) {
-			echo "Uploaded file is not a .csv! Returning to upload page.";
-			header( "refresh:3;url=upload.html" );
+			echo "<br><h3>Uploaded file is not a .csv! Returning to upload page.</h3>";
+			header( "refresh:3;url=../cvs_upload.html" );
 			return;
 		}
     	//Display file upload success
@@ -143,31 +147,41 @@ if (isset($_POST['submit'])) {
 	$data_raw_csv;
 	$row_count_1 = 0;
 	$row_count_2 = 0;
+	$row_count_3 = 0;
+	$row_count_4 = 0;
+	$badrowcount = 0;
 	while($data = fgetcsv($handle, ',')){
-	    $num = count($data);
-	    if($row == 0){
-	            $field_labels = $data;
-	    }else{
-	        $data_raw_csv[$row -1] = $data;
-	    }
-	    $row++;
-	    if($row != 1){
-	    
-		//Insert into database
-		$result_data = array();
-		$result_location = array();
-		$result_location['rows_effected'] = 1000;
-		$result_data['rows_effected'] = 1000;
-		$result_location['db_name'] = "fuck";
-		$result_data['db_name'] = "fuck";
-	
-		$result_data = insertCalSpeedData($data);
-		//$result_location = insertLocation($data[1],$data[3],$data[10],$data[11]);
-		$row_count_1 += $result_data['rows_effected'];
-		$row_count_2 += $result_location['rows_effected'];
+		if (count($data) == 123){
+		    $row++;
+		    if($row > 1){
+			//Insert into database
+			$result_data = array();
+			$result_location = array();
+			$result_data = insertCalSpeedData($data);
+			$result_location = insertLocation($data[1],$data[3],$data[10],$data[11]);
+			$row_count_1 += $result_data['data_rows_inserted'];
+			$row_count_2 += $result_data['data_rows_updated'];
+			$row_count_3 += $result_location['data_rows_inserted'];
+			$row_count_4 += $result_location['data_rows_updated'];
+			}
+		}
+		else{
+			$badrowcount += 1; 
+			$badrowref = $row + 1;
 		}
 	}
-	echo "In table '" . $result_data['db_name'] . " ', " . $result_data['rows_effected'] . " rows were inserted. <br><br>";
-	echo "In table '" . $result_location['db_name']  . " ', " .  $result_location['rows_effected'] . " rows were inserted";
+	if($badrowcount > 0){
+		echo $badrowcount . " of the rows in the provided data set has a missing value! <br><br>";
+		echo "The error is located around row " . $badrowref . "!";
+	}
+	echo "<h4><b>In the table '" . $result_data['db_name'] . " ', " . $row_count_1 . " row(s) were inserted and " . $row_count_2 . " row(s) were updated!</h4></b><br>";
+	echo "<h4><b>In the table '" . $result_location['db_name'] . " ', " . $row_count_3 . " row(s) were inserted and " . $row_count_4 . " row(s) were updated!</h4></b><br><br>";
 	fclose($handle);}
 ?>
+
+
+
+
+
+
+
