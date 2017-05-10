@@ -149,33 +149,61 @@ if (isset($_POST['submit'])) {
 	$row_count_3 = 0;
 	$row_count_4 = 0;
 	$badrowcount = 0;
+	$result_data = array();
+	$result_location = array();
 	while($data = fgetcsv($handle, ',')){
 		if (count($data) == 123){
 		    $row++;
 		    if($row > 1){
-			//Insert into database
-			$result_data = array();
-			$result_location = array();
-			$result_data = insertCalSpeedData($data);
-			$result_location = insertLocation($data[1],$data[3],$data[10],$data[11]);
-			$row_count_1 += $result_data['data_rows_inserted'];
-			$row_count_2 += $result_data['data_rows_updated'];
-			$row_count_3 += $result_location['data_rows_inserted'];
-			$row_count_4 += $result_location['data_rows_updated'];
+		    	if($data[0] == "Master_ID"){
+		    		$ii = -1;
+		    	}
+				else {
+					$ii = 0;
+				}
+					//Insert into database
+					$result_data = array();
+					$result_location = array();
+					$result_data = insertCalSpeedData($data);
+					$result_location = insertLocation($data[1 + $ii],$data[3 + $ii],$data[10 + $ii],$data[11+$ii]);
+					$row_count_1 += $result_data['data_rows_inserted'];
+					$row_count_2 += $result_data['data_rows_updated'];
+					$row_count_3 += $result_location['data_rows_inserted'];
+					$row_count_4 += $result_location['data_rows_updated'];
 			}
 		}
 		else{
 			$badrowcount += 1; 
 			$badrowref = $row + 1;
+			
 		}
 	}
 	if($badrowcount > 0){
-		echo $badrowcount . " of the rows in the provided data set has a missing value! <br><br>";
+		echo "Improper CSV format. Please Check Template!<br><br>";
+		echo $badrowcount . " of the rows in the provided data set has a missing or bad value! <br><br>";
 		echo "The error is located around row " . $badrowref . "!";
 	}
+	
+	if($result_data == null){
+		$result_data = array();
+	    $result_data['db_name'] = "N/A";
+		
+		$resulter = "Error. Data not inserted into database.";
+	}
+	else{
+		$resulter = "Done. Database updated with uploaded file!<br><br>";
+	}
+	
+	
+	if($result_location == null){
+		$result_location = array();
+	    $result_location['db_name'] = "N/A";
+	}
+	
 	echo "<h4><b>In the table '" . $result_data['db_name'] . " ', " . $row_count_1 . " row(s) were inserted and " . $row_count_2 . " row(s) were updated!</h4></b><br>";
 	echo "<h4><b>In the table '" . $result_location['db_name'] . " ', " . $row_count_3 . " row(s) were inserted and " . $row_count_4 . " row(s) were updated!</h4></b><br><br>";
 	fclose($handle);}
+	echo $resulter;
 ?>
 
 
